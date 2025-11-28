@@ -5,10 +5,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Users, MessageSquare, Languages, Briefcase, ExternalLink } from "lucide-react"
 import Link from "next/link"
 import { mockEmployees } from "@/lib/mock-data"
+import { ClientsList } from "@/components/clients/clients-list"
+import { fetchHubSpotContacts } from "@/lib/hubspot"
 
-export function ClientDashboard() {
+export async function ClientDashboard() {
   // Simulating team assigned to client "Interprotección"
   const clientTeam = mockEmployees.filter((e) => e.client === "Interprotección" || e.client === "Banorte")
+  
+  // Fetch HubSpot contacts
+  const hubSpotContacts = await fetchHubSpotContacts()
 
   return (
     <div className="space-y-6">
@@ -137,6 +142,11 @@ export function ClientDashboard() {
             </Card>
           ))}
         </div>
+      </div>
+
+      {/* Clients List from HubSpot */}
+      <div className="mt-8">
+        <ClientsList contacts={hubSpotContacts} />
       </div>
     </div>
   )
