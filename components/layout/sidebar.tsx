@@ -10,7 +10,6 @@ import {
   FileText,
   GraduationCap,
   BarChart3,
-  Settings,
   ChevronLeft,
   ChevronRight,
   UserCircle,
@@ -22,6 +21,8 @@ import { useState } from "react"
 
 interface SidebarProps {
   userRole: "employee" | "admin" | "manager" | "client"
+  mobileOpen?: boolean
+  onMobileClose?: () => void
 }
 
 const adminNavItems = [
@@ -31,7 +32,6 @@ const adminNavItems = [
   { href: "/admin/documents", label: "Documentos", icon: FileText },
   { href: "/admin/university", label: "University", icon: GraduationCap },
   { href: "/admin/reports", label: "Reportes", icon: BarChart3 },
-  { href: "/admin/settings", label: "Configuración", icon: Settings },
 ]
 
 const employeeNavItems = [
@@ -40,15 +40,13 @@ const employeeNavItems = [
   { href: "/employee/vacations", label: "Vacaciones", icon: Calendar },
   { href: "/employee/documents", label: "Documentos", icon: FileText },
   { href: "/employee/university", label: "University", icon: GraduationCap },
-  { href: "/employee/directory", label: "Directorio", icon: Users },
 ]
 
 const clientNavItems = [
   { href: "/client", label: "Dashboard", icon: Home },
-  { href: "/client/team", label: "Mi Equipo", icon: Users },
 ]
 
-export function Sidebar({ userRole }: SidebarProps) {
+export function Sidebar({ userRole, mobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
 
@@ -64,6 +62,9 @@ export function Sidebar({ userRole }: SidebarProps) {
       className={cn(
         "fixed left-0 top-0 z-40 h-screen bg-card border-r border-border transition-all duration-300 flex flex-col",
         collapsed ? "w-[72px]" : "w-64",
+        // Mobile: hidden by default, shown when mobileOpen is true
+        mobileOpen ? "translate-x-0" : "-translate-x-full",
+        "lg:translate-x-0",
       )}
     >
       {/* Logo */}
@@ -100,6 +101,7 @@ export function Sidebar({ userRole }: SidebarProps) {
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  onClick={onMobileClose}
                   className={cn(
                     "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
                     isActive
